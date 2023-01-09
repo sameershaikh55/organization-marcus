@@ -14,9 +14,10 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.login = catchAsyncErrors(async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
 
-  if (!email || !password) return next(new ErrorHandler("Invalid field", 422));
+  if (!email || !password || !role)
+    return next(new ErrorHandler("Invalid field", 422));
 
   const gettingRecord = await RegistrationModel.findOne({ email }).select(
     "+password"
@@ -26,13 +27,14 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
 
   const validPassword = await bcrypt.compare(password, gettingRecord.password);
 
-  if (!validPassword)
-    return next(new ErrorHandler("Invalid email and password", 400));
+  if (!validPassword || gettingRecord.role !== role)
+    return next(new ErrorHandler("Invalid email, password and role", 400));
 
   gettingRecord.password = undefined;
   sendToken(gettingRecord, 200, res);
 });
 
+// LOGOUT
 exports.logout = catchAsyncErrors(async (req, res, next) => {
   res.cookie("token", null, {
     expires: new Date(Date.now()),

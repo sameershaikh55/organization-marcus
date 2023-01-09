@@ -6,46 +6,12 @@ const crypto = require("crypto");
 var jwt = require("jsonwebtoken");
 
 const usersSchema = new Schema({
-  name: {
-    type: String,
-    trim: true,
-    required: [true, "Please Enter Your Name"],
-    maxLength: [30, "Name cannot exceed 30 characters"],
-    minLength: [3, "Name should have more than 4 characters"],
-  },
-  country: {
-    type: String,
-    trim: true,
-    required: [true, "Please Enter Your Country"],
-    maxLength: [30, "Country cannot exceed 30 characters"],
-    minLength: [2, "Country should have more than 2 characters"],
-  },
-  province: {
-    type: String,
-    trim: true,
-    required: [true, "Please Enter Your Province"],
-    maxLength: [30, "Province cannot exceed 30 characters"],
-    minLength: [2, "Province should have more than 2 characters"],
-  },
-  city: {
-    type: String,
-    trim: true,
-    required: [true, "Please Enter Your City"],
-    maxLength: [30, "City cannot exceed 30 characters"],
-    minLength: [2, "City should have more than 2 characters"],
-  },
   email: {
     type: String,
     required: [true, "Please Enter Your Email"],
     trim: true,
     unique: true,
     validate: [validator.isEmail, "Please Enter a valid Email"],
-  },
-  phone: {
-    type: Number,
-    required: true,
-    trim: true,
-    minLength: 11,
   },
   password: {
     type: String,
@@ -54,24 +20,20 @@ const usersSchema = new Schema({
     minLength: [8, "Password should be greater than 8 characters"],
     select: false,
   },
+  role: {
+    type: String,
+    enum: ["Employee", "Logistic", "Executive", "Admin"],
+    default: "Employee",
+  },
+  status: {
+    type: String,
+    enum: ["Active", "notActive"],
+    default: "notActive",
+  },
   resetPasswordToken: {
     token: String,
     expire: Date,
     select: false,
-  },
-  devices: {
-    registered: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "registerDevices",
-      },
-    ],
-    stolen: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "stolenDevice",
-      },
-    ],
   },
   createdAt: {
     type: Date,
