@@ -15,3 +15,19 @@ exports.authentication = catchAsyncErrors(async (req, res, next) => {
 
   next();
 });
+
+// AUTHORIZE ROLES
+exports.authorizeRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(res.user.role)) {
+      return next(
+        new ErrorHandler(
+          `Role: ${res.user.role} is not allowed to access this resouce`,
+          403
+        )
+      );
+    }
+
+    next();
+  };
+};

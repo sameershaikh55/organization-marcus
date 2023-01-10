@@ -21,7 +21,6 @@ app.use(cors());
 
 // ROUTE IMPORT
 const auth = require("./routes/auth");
-const profile = require("./routes/profile");
 
 // TESTING
 app.get("/", (req, res) => {
@@ -30,7 +29,6 @@ app.get("/", (req, res) => {
 
 // CONTROLLERS
 app.use("/api/auth", auth);
-app.use("/api/profile", profile);
 
 // Middleware for Errors
 app.use(errorMiddleware);

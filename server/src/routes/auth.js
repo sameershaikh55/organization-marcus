@@ -1,26 +1,42 @@
 const express = require("express");
 const router = express.Router();
-const { body } = require("express-validator");
 
 // CONTROLLERS
 const {
   register,
   login,
   logout,
-  forgotPassword,
   resetPassword,
+  deleteUser,
+  updateUser,
+  allUsers,
 } = require("../controller/auth");
 
+// MIDDLEWARE
+const {
+  authentication,
+  authorizeRoles,
+} = require("../middleware/authentication");
+
 // ROUTES
-router.route("/register").post(register);
 router.route("/login").post(login);
 router.route("/logout").get(logout);
+
+// ADMIN
 router
-  .route("/password/forgot")
-  .post(
-    body("email").isEmail().withMessage("Please enter a valid email address"),
-    forgotPassword
-  );
-router.route("/password/reset/:token").patch(resetPassword);
+  .route("/register")
+  .post(authentication, authorizeRoles("Admin"), register);
+// ADMIN
+
+// ICT
+router
+  .route("/users")
+  .get(authentication, authorizeRoles("Admin", "ICT"), allUsers);
+router
+  .route("/user/:id")
+  .patch(authentication, authorizeRoles("ICT"), resetPassword)
+  .put(authentication, authorizeRoles("ICT"), updateUser)
+  .delete(authentication, authorizeRoles("Admin", "ICT"), deleteUser);
+// ICT
 
 module.exports = router;
