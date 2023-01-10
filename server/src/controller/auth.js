@@ -9,7 +9,7 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
   const userData = await RegistrationModel.create(req.body);
   userData.password = undefined;
 
-  sendResponse(true, 200, "user", userData, res);
+  sendResponse(true, 201, "user", userData, res);
 });
 
 exports.login = catchAsyncErrors(async (req, res, next) => {

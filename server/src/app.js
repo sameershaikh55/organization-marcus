@@ -21,6 +21,7 @@ app.use(cors());
 
 // ROUTE IMPORT
 const auth = require("./routes/auth");
+const supplies = require("./routes/supplies");
 
 // TESTING
 app.get("/", (req, res) => {
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 
 // CONTROLLERS
 app.use("/api/auth", auth);
+app.use("/api/supplies", supplies);
 
 // Middleware for Errors
 app.use(errorMiddleware);
