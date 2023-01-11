@@ -6,6 +6,7 @@ const {
   addSupplies,
   allSupplies,
   deleteSupplies,
+  editSupplies,
 } = require("../controller/supplies");
 
 // MIDDLEWARE
@@ -23,6 +24,7 @@ router
   .post(authentication, authorizeRoles("Logistic"), addSupplies);
 router
   .route("/:id")
+  .put(authentication, authorizeRoles("Logistic"), editSupplies)
   .delete(authentication, authorizeRoles("Logistic"), deleteSupplies);
 
 module.exports = router;
