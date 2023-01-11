@@ -39,7 +39,6 @@ router
   .get(authentication, authorizeRoles("Admin", "ICT"), allUsers);
 router
   .route("/user/:id")
-  .patch(authentication, authorizeRoles("ICT"), resetPassword)
   .put(authentication, authorizeRoles("ICT"), updateUser)
   .delete(authentication, authorizeRoles("Admin", "ICT"), deleteUser);
 // ICT

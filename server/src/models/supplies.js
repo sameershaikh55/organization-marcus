@@ -20,14 +20,16 @@ const suppliesSchema = new Schema({
     unique: true,
   },
   quantity: {
-    type: String,
+    type: Number,
     required: [true, "Please Enter the Quantity"],
     trim: true,
+    min: [0, "Please Enter Quantity Minimum 0 or 1"],
   },
   prixUnit: {
-    type: String,
+    type: Number,
     required: [true, "Please Enter the Prix Unit"],
     trim: true,
+    min: [0, "Please Enter Prix Unit Minimum 0 or 1"],
   },
   purchaseDate: {
     type: String,
@@ -35,15 +37,18 @@ const suppliesSchema = new Schema({
     trim: true,
   },
   depreciatedValue: {
-    type: String,
+    type: Number,
     required: [true, "Please Enter the Depreciated Value"],
     trim: true,
+    min: [0, "Please Enter Depreciated Value Minimum 0 or 1"],
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+
+
 
 const SuppliesModel = new model("supplies", suppliesSchema);
 module.exports = SuppliesModel;

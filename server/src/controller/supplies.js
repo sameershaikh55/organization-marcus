@@ -1,4 +1,3 @@
-const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const SuppliesModel = require("../models/supplies");
 const sendResponse = require("../utils/sendResponse");
@@ -30,6 +29,6 @@ exports.allSupplies = catchAsyncErrors(async (req, res, next) => {
 // DELETE Supplies
 exports.deleteSupplies = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
-  await SuppliesModel.findByIdAndDelete(id);
-  sendResponse(true, 200, "message", "Supplies deleted!", res);
+  const supplies = await SuppliesModel.findByIdAndDelete(id);
+  sendResponse(true, 200, "supplies", supplies, res);
 });

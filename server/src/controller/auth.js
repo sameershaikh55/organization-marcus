@@ -8,7 +8,6 @@ const sendResponse = require("../utils/sendResponse");
 exports.register = catchAsyncErrors(async (req, res, next) => {
   const userData = await RegistrationModel.create(req.body);
   userData.password = undefined;
-
   sendResponse(true, 201, "user", userData, res);
 });
 
@@ -44,31 +43,6 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
   sendResponse(true, 200, "message", "logged out successfully", res);
 });
 
-// Reset Password
-exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
-  const { id } = req.params;
-  const { password, confirmPassword } = req.body;
-
-  if (!password) {
-    return next(new ErrorHandler("Invalid field", 422));
-  }
-
-  const user = await RegistrationModel.findById(id);
-
-  if (!user) {
-    return next(new ErrorHandler("user not found", 400));
-  }
-
-  if (password !== confirmPassword) {
-    return next(new ErrorHandler("Password does not match", 400));
-  }
-
-  user.password = password;
-  await user.save();
-
-  sendResponse(true, 200, "message", "Password updated!", res);
-});
-
 // DELETE USER
 exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
@@ -80,10 +54,22 @@ exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
 exports.updateUser = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 
-  const updated = await RegistrationModel.findByIdAndUpdate(id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  var updated;
+
+  if ("password" in req.body) {
+    const user = await RegistrationModel.findById(id);
+    user.password = req.body.password;
+    updated = await user.save({
+      new: true,
+      runValidators: true,
+    });
+    updated.password = undefined;
+  } else {
+    updated = await RegistrationModel.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+  }
 
   sendResponse(true, 200, "user", updated, res);
 });
