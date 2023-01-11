@@ -72,8 +72,8 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 // DELETE USER
 exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
-  await RegistrationModel.findByIdAndDelete(id);
-  sendResponse(true, 200, "message", "User deleted!", res);
+  const deletedUser = await RegistrationModel.findByIdAndDelete(id);
+  sendResponse(true, 200, "user", deletedUser, res);
 });
 
 // Update Role
@@ -82,6 +82,7 @@ exports.updateUser = catchAsyncErrors(async (req, res, next) => {
 
   const updated = await RegistrationModel.findByIdAndUpdate(id, req.body, {
     new: true,
+    runValidators: true,
   });
 
   sendResponse(true, 200, "user", updated, res);
@@ -96,4 +97,9 @@ exports.allUsers = catchAsyncErrors(async (req, res, next) => {
   );
 
   sendResponse(true, 200, "users", removingIrrelevent, res);
+});
+
+// GET USER DATA WITH TOKEN AUTHENTICATION
+exports.getUserData = catchAsyncErrors(async (req, res, next) => {
+  sendResponse(true, 200, "user", res.user, res);
 });

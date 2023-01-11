@@ -10,6 +10,7 @@ const {
   deleteUser,
   updateUser,
   allUsers,
+  getUserData,
 } = require("../controller/auth");
 
 // MIDDLEWARE
@@ -21,6 +22,10 @@ const {
 // ROUTES
 router.route("/login").post(login);
 router.route("/logout").get(logout);
+
+// AUTHENTICATED
+router.route("/user-data").get(authentication, getUserData);
+// AUTHENTICATED
 
 // ADMIN
 router
