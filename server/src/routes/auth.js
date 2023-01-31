@@ -6,11 +6,11 @@ const {
   register,
   login,
   logout,
-  resetPassword,
   deleteUser,
   updateUser,
   allUsers,
   getUserData,
+  updateWholeUser,
 } = require("../controller/auth");
 
 // MIDDLEWARE
@@ -39,7 +39,8 @@ router
   .get(authentication, authorizeRoles("Admin", "ICT"), allUsers);
 router
   .route("/user/:id")
-  .put(authentication, authorizeRoles("ICT"), updateUser)
+  .put(authentication, authorizeRoles("Admin", "ICT"), updateUser)
+  .patch(authentication, authorizeRoles("Admin", "ICT"), updateWholeUser)
   .delete(authentication, authorizeRoles("Admin", "ICT"), deleteUser);
 // ICT
 

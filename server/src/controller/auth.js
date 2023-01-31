@@ -2,13 +2,30 @@ const bcrypt = require("bcryptjs");
 const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const RegistrationModel = require("../models/registration");
+const UserDetails = require("../models/userDetails");
 const sendToken = require("../utils/jwtToken");
 const sendResponse = require("../utils/sendResponse");
+const ObjectId = require("mongodb").ObjectId;
 
 exports.register = catchAsyncErrors(async (req, res, next) => {
-  const userData = await RegistrationModel.create(req.body);
-  userData.password = undefined;
-  sendResponse(true, 201, "user", userData, res);
+  const _id = new ObjectId();
+
+  const userDataFields = {
+    email: req.body.personalInformation.email,
+    password: req.body.personalInformation.password,
+    role: req.body.position.role,
+  };
+
+  req.body.personalInformation.password = undefined;
+  const userDataDetail = await UserDetails.create({
+    _id,
+    ...req.body,
+  });
+  await RegistrationModel.create({
+    _id,
+    ...userDataFields,
+  });
+  sendResponse(true, 201, "user", userDataDetail, res);
 });
 
 exports.login = catchAsyncErrors(async (req, res, next) => {
@@ -46,40 +63,92 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
 // DELETE USER
 exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
+  await UserDetails.findByIdAndDelete(id);
   const deletedUser = await RegistrationModel.findByIdAndDelete(id);
   sendResponse(true, 200, "user", deletedUser, res);
 });
 
 // Update Role
 exports.updateUser = catchAsyncErrors(async (req, res, next) => {
-  const { id } = req.params;
-
   var updated;
 
+  const { id } = req.params;
+  updated = await UserDetails.findById(id);
   if ("password" in req.body) {
     const user = await RegistrationModel.findById(id);
     user.password = req.body.password;
-    updated = await user.save({
+    await user.save({
       new: true,
       runValidators: true,
     });
-    updated.password = undefined;
-  } else {
-    updated = await RegistrationModel.findByIdAndUpdate(id, req.body, {
+  } else if ("role" in req.body || "status" in req.body) {
+    await RegistrationModel.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
     });
+
+    if ("role" in req.body) {
+      const updatedVal = await UserDetails.findById(id);
+      const position = {
+        contractEndDate: updatedVal.position.contractEndDate,
+        contractEntryDate: updatedVal.position.contractEntryDate,
+        role: req.body.role,
+      };
+      updated = await UserDetails.findByIdAndUpdate(
+        id,
+        {
+          position,
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+    } else {
+      updated = await UserDetails.findByIdAndUpdate(id, req.body, {
+        new: true,
+        runValidators: true,
+      });
+    }
   }
+  // else {
+  //   updated = await UserDetails.findByIdAndUpdate(id, req.body, {
+  //     new: true,
+  //     runValidators: true,
+  //   });
+  // }
+
+  sendResponse(true, 200, "user", updated, res);
+});
+
+// Update User Data
+exports.updateWholeUser = catchAsyncErrors(async (req, res, next) => {
+  const { id } = req.params;
+
+  var updated = await UserDetails.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  await RegistrationModel.findByIdAndUpdate(
+    id,
+    {
+      email: updated.personalInformation.email,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 
   sendResponse(true, 200, "user", updated, res);
 });
 
 // Get all users
 exports.allUsers = catchAsyncErrors(async (req, res, next) => {
-  const users = await RegistrationModel.find();
+  const users = await UserDetails.find();
 
   const removingIrrelevent = users.filter((content) =>
-    ["Employee", "Logistic", "Executive"].includes(content.role)
+    ["Employee", "Logistic", "Executive"].includes(content.position.role)
   );
 
   sendResponse(true, 200, "users", removingIrrelevent, res);
