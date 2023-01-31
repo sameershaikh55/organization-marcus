@@ -16,9 +16,7 @@ const {
 } = require("../middleware/authentication");
 
 // ROUTES
-router
-  .route("/")
-  .get(authentication, authorizeRoles("Employee", "Logistic"), allSupplies);
+router.route("/").get(authentication, allSupplies);
 router
   .route("/add")
   .post(authentication, authorizeRoles("Logistic"), addSupplies);

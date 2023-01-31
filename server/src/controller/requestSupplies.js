@@ -20,13 +20,22 @@ exports.userAllSuppliesRequest = catchAsyncErrors(async (req, res, next) => {
     .populate("user")
     .populate("supplies");
 
+  console.log(requests);
+
   sendResponse(true, 200, "supplies", requests, res);
 });
 
 // Add SuppliesRequest
 exports.addSuppliesRequest = catchAsyncErrors(async (req, res, next) => {
-  const request = await RequestedSuppliesModel.create(req.body);
-  sendResponse(true, 201, "supplies", request, res);
+  const request = await RequestedSuppliesModel.create({
+    ...req.body,
+    user: res.user._id,
+  });
+  const requestedSupplies = await RequestedSuppliesModel.findById(request._id)
+    .populate("user")
+    .populate("supplies");
+
+  sendResponse(true, 201, "supplies", requestedSupplies, res);
 });
 
 // DELETE SuppliesRequest
@@ -55,9 +64,19 @@ exports.approveSuppliesRequest = catchAsyncErrors(async (req, res, next) => {
     request.supplies,
     {
       $inc: { quantity: -request.requestedQuantity },
+    },
+    {
+      new: true,
+      runValidators: true,
     }
   );
-  await RequestedSuppliesModel.findByIdAndDelete(id);
+  const requestUpdated = await RequestedSuppliesModel.findByIdAndDelete(id);
 
-  sendResponse(true, 200, "supplies", updatedSupplies, res);
+  sendResponse(
+    true,
+    200,
+    "supplies",
+    { supplies: updatedSupplies, requests: requestUpdated },
+    res
+  );
 });
