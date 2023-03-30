@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../layout";
 import FormTaglines from "../components/FormTaglines";
@@ -9,11 +9,9 @@ import { useAlert } from "react-alert";
 import {
   clearErrors,
   getSupplies,
-  requestSupplies,
   deleteRequest,
   approveRequest,
 } from "../redux/action/supplies";
-import { IoMdAdd } from "react-icons/io";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import {
   APPROVE_SUPPLIES_RESET,
@@ -21,12 +19,11 @@ import {
   DELETE_REQUEST_RESET,
 } from "../redux/type/supplies";
 import { FaCheck } from "react-icons/fa";
+import RequestSuppliesBodyRow from "../components/RequestSuppliesBodyRow";
 
 const Supplies = () => {
   const dispatch = useDispatch();
   const alert = useAlert();
-
-  const [requestQuantity, setRequestQuantity] = useState("");
 
   const { user } = useSelector((state) => state.user);
   const {
@@ -38,23 +35,6 @@ const Supplies = () => {
     requestDeleted,
     requestApproveSuccess,
   } = useSelector((state) => state.supplies);
-
-  const requestQ = (id, requestedQuantity, currentQuantity) => {
-    if (
-      Number(requestedQuantity) > 0 &&
-      currentQuantity >= Number(requestedQuantity)
-    ) {
-      dispatch(
-        requestSupplies({
-          supplies: id,
-          requestedQuantity,
-        })
-      );
-      setRequestQuantity("");
-    } else {
-      alert.error("Please Enter valid Quantity");
-    }
-  };
 
   useEffect(() => {
     dispatch(getSupplies(user.role));
@@ -129,55 +109,7 @@ const Supplies = () => {
                 <tbody>
                   {(supplies.length &&
                     supplies.map((content, i) => {
-                      const {
-                        tagID,
-                        description,
-                        serialNumber,
-                        quantity,
-                        prixUnit,
-                        purchaseDate,
-                        depreciatedValue,
-                        _id,
-                      } = content;
-                      return (
-                        <tr key={i}>
-                          <td className="color4">{tagID}</td>
-                          <td title={description} className="color4">
-                            <div className="elipses">{description}</div>
-                          </td>
-                          <td className="color4">{serialNumber}</td>
-                          <td className="color4">{quantity}</td>
-                          <td className="color4">{prixUnit}</td>
-                          <td className="color4">{purchaseDate}</td>
-                          <td className="color4">{depreciatedValue}</td>
-                          <td className="color4">
-                            {(quantity > 0 && (
-                              <div className="d-flex gap-2">
-                                <input
-                                  className="text-center rounded-3 border-0"
-                                  style={{ width: "40px", fontSize: "18px" }}
-                                  type="number"
-                                  placeholder="Q"
-                                  value={requestQuantity}
-                                  onChange={(e) =>
-                                    setRequestQuantity(e.target.value)
-                                  }
-                                />
-                                <button
-                                  onClick={() =>
-                                    requestQ(_id, requestQuantity, quantity)
-                                  }
-                                  // disabled={selected.flat().length ? false : true}
-                                  className="rounded-3 btn btn-warning rounded-3 border-0 f14 w-100 text-center color6 fw-bold"
-                                >
-                                  <IoMdAdd fontSize={25} color="#fff" />
-                                </button>
-                              </div>
-                            )) ||
-                              "-"}
-                          </td>
-                        </tr>
-                      );
+                      return <RequestSuppliesBodyRow {...content} />;
                     })) || (
                     <tr>
                       <td className="text-center" colSpan={8}>
@@ -206,7 +138,7 @@ const Supplies = () => {
                     <th className="color2">Tag ID</th>
                     <th className="color2">Description</th>
                     <th className="color2">Serial Number</th>
-                    <th className="color2">Current Quantity</th>
+                    <th className="color2">Requested By</th>
                     <th className="color2">Requested Quantity</th>
                     <th className="color2">Requested Date</th>
                     <th className="color2">Action</th>
@@ -217,12 +149,8 @@ const Supplies = () => {
                     requests.map((content, i) => {
                       const {
                         requestedQuantity,
-                        supplies: {
-                          tagID,
-                          description,
-                          serialNumber,
-                          quantity,
-                        },
+                        supplies: { tagID, description, serialNumber },
+                        user: { role, email },
                         createdAt,
                         _id,
                       } = content;
@@ -236,7 +164,11 @@ const Supplies = () => {
                             <div className="elipses">{description}</div>
                           </td>
                           <td className="color4">{serialNumber}</td>
-                          <td className="color4">{quantity}</td>
+                          <td className="color4">
+                            {email}
+                            <br />
+                            Role: {role}
+                          </td>
                           <td className="text-warning fw700">
                             {requestedQuantity}
                           </td>

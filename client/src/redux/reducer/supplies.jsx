@@ -22,6 +22,7 @@ import {
   DELETE_REQUEST_RESET,
   APPROVE_SUPPLIES_SUCCESS,
   APPROVE_SUPPLIES_FAIL,
+  APPROVE_SUPPLIES_RESET,
 } from "../type/supplies";
 
 export const supplies = (
@@ -140,6 +141,7 @@ export const supplies = (
     case UPDATE_SUPPLIES_RESET:
     case CREATE_REQUEST_SUPPLIES_RESET:
     case DELETE_REQUEST_RESET:
+    case APPROVE_SUPPLIES_RESET:
       return {
         ...state,
         success: false,
