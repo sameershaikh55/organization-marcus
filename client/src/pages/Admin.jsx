@@ -16,6 +16,8 @@ import UpdateRole from "../components/UpdateRole";
 import { AiFillEye } from "react-icons/ai";
 import View from "../components/View";
 import { Link } from "react-router-dom";
+import Socials from "../components/Socials";
+import Menu from "../components/Menu";
 
 const Admin = () => {
   const dispatch = useDispatch();
@@ -56,6 +58,11 @@ const Admin = () => {
   return (
     <div onClick={() => settings && setSettings("")}>
       <Layout classname="home_container Admin" title="Admin">
+        <div className="d-flex justify-content-center bg_color1 w-100 py-3 rounded-3 border border-1 border-top-0 border-start-0 border-end-0 border-bottom-white">
+          <Menu />
+        </div>
+        <hr />
+
         {register && (
           <Register
             editData={editData}
@@ -240,6 +247,10 @@ const Admin = () => {
 
           <div className="col-12 text-end mt-4">
             <Logout />
+          </div>
+
+          <div className="col-12 d-flex justify-content-center">
+            <Socials />
           </div>
         </div>
       </Layout>

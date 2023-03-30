@@ -18,6 +18,7 @@ $color6: #eae6e1;
 $color7: #c3baaf;
 $color8: #d0d2d6;
 $color9: #161d31;
+$color10: #00c2fe;
 // VARIABLES END
 
 // GLOBAL START
@@ -258,6 +259,18 @@ p {
 
 .bg_color9 {
   background: $color9;
+}
+
+.color10 {
+  color: $color10;
+
+  &:hover {
+    color: $color10;
+  }
+}
+
+.bg_color10 {
+  background: $color10;
 }
 
 .pink_bg {
@@ -538,6 +551,14 @@ input[type="date"] {
   color: $color4;
 }
 // INPUT END
+
+// ROLES START
+.roles_container {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+// ROLES END
 
 // TEXTAREA START
 .textarea_container {
@@ -887,22 +908,37 @@ input[type="number"] {
 
 // BGS END
 .ICT {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   background-image: linear-gradient(#283046e8, #283046e8),
     url("../assets/images/home.jpg");
 }
 .Admin {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   background-image: linear-gradient(#283046f3, #283046f3),
     url("../assets/images/admin.avif");
 }
 .Executive {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   background-image: linear-gradient(#283046f3, #283046f3),
     url("../assets/images/executives.avif");
 }
 .Logistic {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   background-image: linear-gradient(#283046f3, #283046f3),
     url("../assets/images/logistics.avif");
 }
 .Employee {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   background-image: linear-gradient(#283046f3, #283046f3),
     url("../assets/images/employe.avif");
 }

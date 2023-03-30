@@ -20,6 +20,8 @@ import ICT from "./pages/ICT";
 import Logistic from "./pages/Logistic";
 import Employee from "./pages/Employee";
 import Supplies from "./pages/Supplies";
+import Roles from "./components/Roles";
+import Menu from "./components/Menu";
 
 const AppRoutes = () => {
   const dispatch = useDispatch();
@@ -56,6 +58,7 @@ const AppRoutes = () => {
           path="/supplies"
           element={<Protected>{user && <Supplies />}</Protected>}
         />
+        <Route path="/roles" element={<Roles />} />
       </Routes>
     </Router>
   );

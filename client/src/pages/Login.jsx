@@ -9,6 +9,8 @@ import { useAlert } from "react-alert";
 import { login, clearErrors } from "../redux/action/auth";
 import SmallLoader from "../components/SmallLoader";
 import Checkbox from "../components/Selectbox";
+import Socials from "../components/Socials";
+import Menu from "../components/Menu";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -59,6 +61,9 @@ const Login = () => {
         <div className="login-left">
           <form onSubmit={submit} className="inner-left d-flex flex-column">
             <div className="d-flex flex-column gap-3">
+              <div className="d-flex justify-content-center">
+                <Menu />
+              </div>
               <Logo />
               <br />
               <br />
@@ -94,7 +99,10 @@ const Login = () => {
               </div>
             </div>
 
-            <p className="text-white f14">@2022 - All rights reserved</p>
+            <div className="d-flex justify-content-between">
+              <p className="text-white f14">@2022 - All rights reserved</p>
+              <Socials />
+            </div>
           </form>
         </div>
       </div>
