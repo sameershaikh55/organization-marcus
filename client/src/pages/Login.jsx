@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import { login, clearErrors } from "../redux/action/auth";
 import SmallLoader from "../components/SmallLoader";
-import Checkbox from "../components/Checkbox";
+import Checkbox from "../components/Selectbox";
 
 const Login = () => {
   const dispatch = useDispatch();

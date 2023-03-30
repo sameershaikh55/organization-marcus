@@ -1,44 +1,28 @@
-import React, { useState } from "react";
-
-const SelectBox = ({ title, name, options, onchange, state }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const Checkbox = ({ value, handleChange }) => {
   return (
-    <div className="custom-select">
-      <details open={isOpen}>
-        <summary className="radios" onClick={() => setIsOpen(true)}>
-          <input
-            type="radio"
-            title={(state === "" && title) || state}
-            checked
-            readOnly
-          />
-        </summary>
-        <ul className="list-unstyled list">
-          {options.map((content, idx) => {
-            return (
-              <li key={idx}>
-                <label
-                  onClick={() => {
-                    onchange({
-                      target: {
-                        name: name,
-                        value: content,
-                      },
-                    });
-                    setIsOpen(false);
-                  }}
-                  htmlFor={content}
-                >
-                  {content}
-                </label>
-              </li>
-            );
-          })}
-        </ul>
-      </details>
+    // Wraps the checkbox component in a div with a custom class
+    <div className="checkbox__wrapper">
+      {/* Label for the checkbox */}
+      <label className="checkbox">
+        {/* The checkbox input */}
+        <input
+          type="checkbox"
+          className="checkbox__input"
+          // Sets the checkbox value to the `value` prop
+          checked={value}
+          // Calls the `handleChange` prop when the checkbox is toggled
+          onChange={handleChange}
+        />
+        {/* The checkbox icon */}
+        <span className="checkbox__check">
+          <svg xmlns="http://www.w3.org/2000/svg" className="checkbox__svg">
+            {/* The path for the checkmark icon */}
+            <path d="M 1 7 L 4 10 L 10 2" fill="none" />
+          </svg>
+        </span>
+      </label>
     </div>
   );
 };
 
-export default SelectBox;
+export default Checkbox;

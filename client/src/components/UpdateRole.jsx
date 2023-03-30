@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import { updateUser, clearErrors } from "../redux/action/users";
 import SmallLoader from "../components/SmallLoader";
-import Checkbox from "../components/Checkbox";
+import Checkbox from "../components/Selectbox";
 import { UPDATE_USER_RESET } from "../redux/type/users";
 
 const UpdateRole = ({ moreSettings, setMoreSettings }) => {

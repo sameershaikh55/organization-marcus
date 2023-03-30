@@ -317,6 +317,80 @@ p {
   }
 }
 
+.checkbox__wrapper {
+  transition: 0.3s;
+  padding: 0rem 0.5rem;
+
+  // Styles
+  .checkbox {
+    font-weight: 300;
+    line-height: 1;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    gap: 1rem;
+
+    &__wrapper {
+      > * {
+        margin-bottom: 1.25rem;
+      }
+    }
+
+    &__input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+
+      &:checked + .checkbox__check .checkbox__svg {
+        path {
+          stroke: #fff;
+          stroke-width: 1.5px;
+          animation: dash 2s ease-out forwards;
+        }
+
+        border: 1px solid #198754;
+        background-color: #198754;
+      }
+    }
+
+    &__svg {
+      overflow: visible;
+      padding: 0.08rem;
+      height: 16px;
+      width: 16px;
+      border-radius: 0.225rem;
+      transform: scale(1.5);
+      border: 1px solid #fff;
+
+      path {
+        stroke: transparent;
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+      }
+    }
+  }
+
+  &:hover {
+    .checkbox {
+      &__svg {
+        border: 1px solid #fff;
+      }
+    }
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
 .elipses {
   overflow: hidden;
   display: -webkit-box;

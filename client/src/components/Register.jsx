@@ -7,7 +7,7 @@ import { useAlert } from "react-alert";
 import { registerUser, clearErrors, updateUser } from "../redux/action/users";
 import SmallLoader from "../components/SmallLoader";
 import { REGISTER_USER_RESET } from "../redux/type/users";
-import Checkbox from "../components/Checkbox";
+import Checkbox from "../components/Selectbox";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 

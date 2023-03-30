@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "../layout";
 import FormTaglines from "../components/FormTaglines";
 import Logout from "../components/Logout";
@@ -15,8 +15,14 @@ import { RiDeleteBin2Fill } from "react-icons/ri";
 import { BiEdit } from "react-icons/bi";
 import { DELETE_USER_RESET } from "../redux/type/users";
 import { Link } from "react-router-dom";
+import { RiFileExcel2Fill } from "react-icons/ri";
+import Checkbox from "../components/Checkbox";
+import { exportToExcel } from "../utils/exportXLS";
 
 const Logistics = () => {
+  const tableRef = useRef(null);
+  const [selectedRows, setSelectedRows] = useState([]);
+
   const dispatch = useDispatch();
   const alert = useAlert();
 
@@ -29,6 +35,14 @@ const Logistics = () => {
   useEffect(() => {
     dispatch(getSupplies(null));
   }, []);
+
+  function handleRowSelect(id) {
+    if (selectedRows.includes(id)) {
+      setSelectedRows(selectedRows.filter((rowId) => rowId !== id));
+    } else {
+      setSelectedRows([...selectedRows, id]);
+    }
+  }
 
   useEffect(() => {
     if (error) {
@@ -48,6 +62,51 @@ const Logistics = () => {
 
   return (
     <Layout classname="home_container Logistic" title="Logistics">
+      {/* table to export */}
+      <table className="d-none" ref={tableRef}>
+        <thead>
+          <tr>
+            <th>Tag ID</th>
+            <th>Description</th>
+            <th>Serial Number</th>
+            <th>Quantity</th>
+            <th>Prix Unit</th>
+            <th>Purchase Date</th>
+            <th>Depreciated Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {supplies.length &&
+            supplies.map((row, index) => {
+              const {
+                tagID,
+                description,
+                serialNumber,
+                quantity,
+                prixUnit,
+                purchaseDate,
+                depreciatedValue,
+              } = row;
+
+              if (selectedRows.includes(row._id)) {
+                return (
+                  <tr key={index}>
+                    <td>{tagID}</td>
+                    <td>{description}</td>
+                    <td>{serialNumber}</td>
+                    <td>{quantity}</td>
+                    <td>{prixUnit}</td>
+                    <td>{purchaseDate}</td>
+                    <td>{depreciatedValue}</td>
+                  </tr>
+                );
+              }
+            })}
+        </tbody>
+        {/* Render table rows and columns from data props */}
+      </table>
+      {/* table to export */}
+
       {addSupplies && (
         <AddSupplies
           addSupplies={addSupplies}
@@ -75,6 +134,13 @@ const Logistics = () => {
             >
               Add Supplies
             </button>
+            <button
+              disabled={!selectedRows.length ? true : false}
+              onClick={() => exportToExcel(tableRef)}
+              className="rounded-3 px-2 bg-success border-0 f20 text-center"
+            >
+              <RiFileExcel2Fill color="#fff" />
+            </button>
           </div>
         </div>
         <br />
@@ -84,6 +150,7 @@ const Logistics = () => {
               <table className="table table-dark table-striped table-hover">
                 <thead>
                   <tr>
+                    <th></th>
                     <th className="color2">Tag ID</th>
                     <th className="color2">Description</th>
                     <th className="color2">Serial Number</th>
@@ -109,6 +176,12 @@ const Logistics = () => {
                       } = content;
                       return (
                         <tr key={i}>
+                          <td>
+                            <Checkbox
+                              value={selectedRows.includes(content._id)}
+                              handleChange={() => handleRowSelect(content._id)}
+                            />
+                          </td>
                           <td className="color4">{tagID}</td>
                           <td title={description} className="color4">
                             <div className="elipses">{description}</div>
